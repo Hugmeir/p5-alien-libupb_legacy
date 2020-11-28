@@ -1,5 +1,5 @@
 {
-   "abstract" : "libupb_legacy, with alien",
+   "abstract" : "legacy version of uPB, with alien",
    "author" : [
       "B Fraser <fraserbn@gmail.com>"
    ],
@@ -65,7 +65,7 @@
          "web" : "https://github.com/Hugmeir/p5-alien-libupb_legacy"
       }
    },
-   "version" : "0.02",
+   "version" : "0.01",
    "x_alienfile" : {
       "generated_by" : "Alien::Build::MM version 2.37",
       "requires" : {

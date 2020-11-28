@@ -1,6 +1,7 @@
 use alienfile;
 use strict;
 use warnings;
+use Config;
 
 sub install_upb {
     my ($build) = @_;
@@ -71,8 +72,23 @@ share {
         my ($build) = @_;
         my $prefix = $build->runtime_prop->{prefix};
         # -DNDEBUG works around https://github.com/google/upb/issues/63
-        $build->runtime_prop->{cflags} = "-I$prefix/include -DNDEBUG";
-        $build->runtime_prop->{libs}   = "-L$prefix/lib -lupb.bindings.googlepb -lupb.pb -lupb.json -lupb.descriptor -lupb ";
+        $build->runtime_prop->{cflags}      = "-I$prefix/include -DNDEBUG";
+
+        # library include order is important to get this to compile with musl (i.e. in Alpine):
+        my @libs_in_order = qw(
+            upb.bindings.googlepb
+            upb
+            upb.json
+            upb.descriptor
+            upb.pb
+        );
+        my $lib_dir     = File::Spec->catfile($prefix, 'lib');
+        my $libs        = join " ", "-L$lib_dir", map "-l$_", @libs_in_order;
+        my $lib_ext     = $Config{lib_ext};
+        my $libs_static = join " ", $libs, map File::Spec->catfile($lib_dir, "lib${_}${lib_ext}"), @libs_in_order;
+
+        $build->runtime_prop->{libs}        = $libs;
+        $build->runtime_prop->{libs_static} = $libs_static;
     };
 };
 
