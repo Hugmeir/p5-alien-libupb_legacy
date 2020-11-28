@@ -1,0 +1,5 @@
+Don't use this!  Writing it as Gooogle::ProtocolBuffers::Dynamic needs
+this specific version of uPB, and that version of uPB needs a specific
+version of libprotobuf.
+
+A house of cards.
